@@ -3,25 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Joel Dickinson | denartes</title>
-  <meta name="description" content="Joel Dickinson, full-stack developer building Stride and other projects.">
-
+  <title>denartes — Follow the Path</title>
   <style>
     :root {
-      --bg: #0b1020;
-      --bg-soft: #121933;
-      --card: rgba(255,255,255,0.06);
-      --text: #f5f7ff;
-      --muted: #a7b0d1;
-      --accent: #7c9cff;
-      --accent-2: #9b7cff;
-      --border: rgba(255,255,255,0.12);
-      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+      --bg: #06070b;
+      --bg2: #090b10;
+      --text: #f5f1ea;
+      --muted: #b89d72;
+      --line: #d4b07a;
+      --line-soft: rgba(212, 176, 122, 0.2);
+      --glow: rgba(212, 176, 122, 0.55);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       scroll-behavior: smooth;
@@ -29,356 +23,229 @@
 
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(124,156,255,0.18), transparent 30%),
-        radial-gradient(circle at top right, rgba(155,124,255,0.16), transparent 28%),
-        linear-gradient(180deg, var(--bg), #070b16 100%);
-      color: var(--text);
-      line-height: 1.6;
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.02), transparent 28%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x: hidden;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(1100px, calc(100% - 2rem));
-      margin: 0 auto;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      backdrop-filter: blur(12px);
-      background: rgba(11, 16, 32, 0.7);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      z-index: 10;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 0;
-    }
-
-    .brand {
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.25rem;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.055;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35) 0.6px, transparent 0.8px),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.25) 0.6px, transparent 0.8px),
+        radial-gradient(circle at 40% 70%, rgba(255,255,255,0.2) 0.6px, transparent 0.8px);
+      background-size: 12px 12px, 16px 16px, 20px 20px;
+      mix-blend-mode: screen;
     }
 
     .hero {
-      min-height: 78vh;
+      min-height: 100vh;
       display: grid;
-      align-items: center;
-      padding: 5rem 0 3rem;
+      place-items: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      z-index: 2;
     }
 
-    .hero-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 3rem;
-      box-shadow: var(--shadow);
+    .hero-inner {
+      width: min(900px, 100%);
     }
 
     .eyebrow {
-      display: inline-block;
-      padding: 0.35rem 0.7rem;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      background: rgba(255,255,255,0.03);
+      color: rgba(184, 157, 114, 0.45);
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      margin-bottom: 1.4rem;
     }
 
     h1 {
-      font-size: clamp(2.5rem, 6vw, 5rem);
-      line-height: 1.02;
-      margin: 0 0 1rem;
-      letter-spacing: -0.04em;
-    }
-
-    .subtitle {
-      font-size: clamp(1.1rem, 2.1vw, 1.35rem);
-      color: var(--muted);
-      max-width: 700px;
-      margin-bottom: 2rem;
-    }
-
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.9rem 1.2rem;
-      border-radius: 12px;
+      margin: 0;
+      font-size: clamp(3.25rem, 9vw, 7rem);
+      line-height: 0.95;
       font-weight: 600;
-      border: 1px solid var(--border);
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      letter-spacing: -0.06em;
     }
 
-    .button:hover {
-      transform: translateY(-1px);
-    }
-
-    .button.primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white;
-      border: none;
-    }
-
-    .button.secondary {
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-    }
-
-    .quick-info {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .quick-info div {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1rem;
-    }
-
-    .quick-info strong {
-      display: block;
-      font-size: 0.9rem;
+    .tagline {
+      margin: 1.5rem auto 0;
+      font-size: clamp(1.2rem, 2.6vw, 2rem);
+      line-height: 1.35;
       color: var(--muted);
-      margin-bottom: 0.35rem;
+      max-width: 26rem;
+      font-weight: 400;
     }
 
-    section {
-      padding: 2rem 0 4rem;
+    .follow-prompt {
+      margin-top: 5rem;
+      color: rgba(184, 157, 114, 0.68);
+      font-size: 0.84rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
     }
 
-    .section-title {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
+    .arrow {
+      display: inline-block;
+      margin-left: 0.35rem;
+      animation: float 1.8s ease-in-out infinite;
     }
 
-    .section-copy {
-      color: var(--muted);
-      max-width: 700px;
-      margin-bottom: 2rem;
+    @keyframes float {
+      0%, 100% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(5px); opacity: 1; }
     }
 
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.2rem;
+    .path-section {
+      position: relative;
+      height: 2600px;
+      margin-top: -4vh;
     }
 
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 1.25rem;
-      box-shadow: var(--shadow);
+    .path-wrap {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
     }
 
-    .card h3 {
-      margin-top: 0;
-      margin-bottom: 0.6rem;
+    #trail {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
     }
 
-    .card p {
-      margin-top: 0;
-      color: var(--muted);
+    .trail-glow {
+      filter: drop-shadow(0 0 14px rgba(212, 176, 122, 0.35))
+              drop-shadow(0 0 30px rgba(212, 176, 122, 0.12));
+      opacity: 0.9;
     }
 
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 1rem 0;
+    .trail-base {
+      opacity: 0.18;
     }
 
-    .tag {
-      padding: 0.35rem 0.7rem;
-      font-size: 0.85rem;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      color: var(--muted);
+    .trail-active {
+      opacity: 0.95;
     }
 
-    footer {
-      padding: 2rem 0 4rem;
-      color: var(--muted);
-      text-align: center;
+    .node-group {
+      transform-box: fill-box;
+      transform-origin: center;
     }
 
-    @media (max-width: 760px) {
-      .nav {
-        flex-direction: column;
-        gap: 0.8rem;
-      }
+    .node-core {
+      filter: drop-shadow(0 0 10px rgba(212, 176, 122, 0.95))
+              drop-shadow(0 0 24px rgba(212, 176, 122, 0.6))
+              drop-shadow(0 0 42px rgba(212, 176, 122, 0.38));
+    }
 
-      .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
+    .spacer {
+      height: 35vh;
+    }
 
-      .hero-card {
-        padding: 1.5rem;
-      }
-
-      .quick-info {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 900px) {
+      .path-section { height: 2200px; }
+      .follow-prompt { margin-top: 4rem; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container nav">
-      <a href="#" class="brand">denartes</a>
-      <nav class="nav-links">
-        <a href="#projects">Projects</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-      </nav>
+  <div class="noise" aria-hidden="true"></div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">denartes</div>
+      <h1>Joel Dickinson</h1>
+      <p class="tagline">Building things that matter,<br>one conviction at a time.</p>
+      <div class="follow-prompt">Follow the path <span class="arrow">↓</span></div>
     </div>
-  </header>
+  </section>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-card">
-        <span class="eyebrow">Full-stack developer</span>
-        <h1>Joel Dickinson</h1>
-        <p class="subtitle">
-          I build practical apps, experiment with ideas, and ship useful software.
-          Currently working on <strong>Stride</strong> and other projects.
-        </p>
+  <section class="path-section" aria-label="Follow the path">
+    <svg id="trail" viewBox="0 0 1200 2600" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="trailGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#d4b07a"/>
+          <stop offset="100%" stop-color="#f1d3a5"/>
+        </linearGradient>
+      </defs>
 
-        <div class="cta-row">
-          <a class="button primary" href="#projects">View Projects</a>
-          <a class="button secondary" href="https://github.com/denartes" target="_blank" rel="noopener noreferrer">GitHub</a>
-        </div>
+      <path id="guidePath"
+        d="M 600 90
+           C 665 240, 420 360, 550 560
+           C 690 785, 835 860, 700 1100
+           C 565 1330, 355 1450, 470 1700
+           C 590 1955, 830 2010, 725 2280
+           C 665 2420, 620 2490, 610 2560"
+        fill="none"
+        stroke="url(#trailGradient)"
+        stroke-width="3"
+        stroke-linecap="round"
+        class="trail-base trail-glow"></path>
 
-        <div class="quick-info">
-          <div>
-            <strong>Focus</strong>
-            Full-stack apps and product building
-          </div>
-          <div>
-            <strong>Main project</strong>
-            Stride
-          </div>
-          <div>
-            <strong>Based online as</strong>
-            denartes
-          </div>
-        </div>
-      </div>
-    </section>
+      <path id="activePath"
+        d="M 600 90
+           C 665 240, 420 360, 550 560
+           C 690 785, 835 860, 700 1100
+           C 565 1330, 355 1450, 470 1700
+           C 590 1955, 830 2010, 725 2280
+           C 665 2420, 620 2490, 610 2560"
+        fill="none"
+        stroke="url(#trailGradient)"
+        stroke-width="3.8"
+        stroke-linecap="round"
+        class="trail-active trail-glow"></path>
 
-    <section id="projects">
-      <h2 class="section-title">Projects</h2>
-      <p class="section-copy">
-        A few things I’m building and exploring. This section is temporary for now and easy to update later.
-      </p>
+      <g id="movingNode" class="node-group">
+        <circle r="20" fill="rgba(212,176,122,0.10)"></circle>
+        <circle r="11" fill="rgba(212,176,122,0.26)"></circle>
+        <circle class="node-core" r="5.5" fill="#f6ddbb"></circle>
+      </g>
+    </svg>
+  </section>
 
-      <div class="projects">
-        <article class="card">
-          <h3>Stride</h3>
-          <p>
-            A project focused on building a useful product experience with clean implementation and practical features.
-          </p>
-          <div class="tags">
-            <span class="tag">Product</span>
-            <span class="tag">Full-stack</span>
-            <span class="tag">Ongoing</span>
-          </div>
-        </article>
+  <div class="spacer"></div>
 
-        <article class="card">
-          <h3>Project Placeholder</h3>
-          <p>
-            Add another project here with a short description, stack, and link when you're ready.
-          </p>
-          <div class="tags">
-            <span class="tag">Web</span>
-            <span class="tag">JavaScript</span>
-          </div>
-        </article>
+  <script>
+    const pathSection = document.querySelector('.path-section');
+    const guidePath = document.getElementById('guidePath');
+    const activePath = document.getElementById('activePath');
+    const movingNode = document.getElementById('movingNode');
 
-        <article class="card">
-          <h3>Project Placeholder</h3>
-          <p>
-            You can duplicate these cards as needed for experiments, tools, or portfolio pieces.
-          </p>
-          <div class="tags">
-            <span class="tag">Tooling</span>
-            <span class="tag">Utility</span>
-          </div>
-        </article>
-      </div>
-    </section>
+    const totalLength = guidePath.getTotalLength();
+    activePath.style.strokeDasharray = totalLength;
+    activePath.style.strokeDashoffset = totalLength;
 
-    <section id="about">
-      <h2 class="section-title">About</h2>
-      <p class="section-copy">
-        I’m Joel Dickinson, a developer focused on building useful tools, learning fast, and improving through real projects.
-        I like practical software, clean interfaces, and ideas that actually get shipped.
-      </p>
-    </section>
+    function updatePath() {
+      const rect = pathSection.getBoundingClientRect();
+      const viewportH = window.innerHeight;
 
-    <section id="contact">
-      <h2 class="section-title">Links</h2>
-      <div class="projects">
-        <article class="card">
-          <h3>GitHub</h3>
-          <p>
-            <a href="https://github.com/denartes" target="_blank" rel="noopener noreferrer">github.com/denartes</a>
-          </p>
-        </article>
+      const start = viewportH * 0.08;
+      const end = rect.height - viewportH * 0.25;
+      const traveled = Math.min(Math.max(start - rect.top, 0), end);
+      const progress = Math.max(0, Math.min(traveled / end, 1));
 
-        <article class="card">
-          <h3>LinkedIn</h3>
-          <p>Add your LinkedIn link here later.</p>
-        </article>
+      const drawLength = totalLength * progress;
+      activePath.style.strokeDashoffset = totalLength - drawLength;
 
-        <article class="card">
-          <h3>Email</h3>
-          <p>Add a contact email here later if you want one public.</p>
-        </article>
-      </div>
-    </section>
-  </main>
+      const point = guidePath.getPointAtLength(Math.max(0.0001, drawLength));
+      movingNode.setAttribute('transform', `translate(${point.x} ${point.y}) scale(${0.95 + progress * 0.12})`);
+    }
 
-  <footer>
-    <div class="container">
-      © 2026 Joel Dickinson / denartes
-    </div>
-  </footer>
+    updatePath();
+    window.addEventListener('scroll', updatePath, { passive: true });
+    window.addEventListener('resize', updatePath);
+  </script>
 </body>
 </html>

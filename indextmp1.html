@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joel Dickinson | denartes</title>
+  <meta name="description" content="Joel Dickinson, full-stack developer building Stride and other projects.">
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #121933;
+      --card: rgba(255,255,255,0.06);
+      --text: #f5f7ff;
+      --muted: #a7b0d1;
+      --accent: #7c9cff;
+      --accent-2: #9b7cff;
+      --border: rgba(255,255,255,0.12);
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124,156,255,0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(155,124,255,0.16), transparent 28%),
+        linear-gradient(180deg, var(--bg), #070b16 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 16, 32, 0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      z-index: 10;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.25rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      min-height: 78vh;
+      display: grid;
+      align-items: center;
+      padding: 5rem 0 3rem;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      background: rgba(255,255,255,0.03);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 1.02;
+      margin: 0 0 1rem;
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      font-size: clamp(1.1rem, 2.1vw, 1.35rem);
+      color: var(--muted);
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.9rem 1.2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      border: none;
+    }
+
+    .button.secondary {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+    }
+
+    .quick-info {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .quick-info div {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem;
+    }
+
+    .quick-info strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    section {
+      padding: 2rem 0 4rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 0.6rem;
+    }
+
+    .card p {
+      margin-top: 0;
+      color: var(--muted);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .tag {
+      padding: 0.35rem 0.7rem;
+      font-size: 0.85rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 2rem 0 4rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .hero-card {
+        padding: 1.5rem;
+      }
+
+      .quick-info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#" class="brand">denartes</a>
+      <nav class="nav-links">
+        <a href="#projects">Projects</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-card">
+        <span class="eyebrow">Full-stack developer</span>
+        <h1>Joel Dickinson</h1>
+        <p class="subtitle">
+          I build practical apps, experiment with ideas, and ship useful software.
+          Currently working on <strong>Stride</strong> and other projects.
+        </p>
+
+        <div class="cta-row">
+          <a class="button primary" href="#projects">View Projects</a>
+          <a class="button secondary" href="https://github.com/denartes" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+
+        <div class="quick-info">
+          <div>
+            <strong>Focus</strong>
+            Full-stack apps and product building
+          </div>
+          <div>
+            <strong>Main project</strong>
+            Stride
+          </div>
+          <div>
+            <strong>Based online as</strong>
+            denartes
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2 class="section-title">Projects</h2>
+      <p class="section-copy">
+        A few things I’m building and exploring. This section is temporary for now and easy to update later.
+      </p>
+
+      <div class="projects">
+        <article class="card">
+          <h3>Stride</h3>
+          <p>
+            A project focused on building a useful product experience with clean implementation and practical features.
+          </p>
+          <div class="tags">
+            <span class="tag">Product</span>
+            <span class="tag">Full-stack</span>
+            <span class="tag">Ongoing</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Project Placeholder</h3>
+          <p>
+            Add another project here with a short description, stack, and link when you're ready.
+          </p>
+          <div class="tags">
+            <span class="tag">Web</span>
+            <span class="tag">JavaScript</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Project Placeholder</h3>
+          <p>
+            You can duplicate these cards as needed for experiments, tools, or portfolio pieces.
+          </p>
+          <div class="tags">
+            <span class="tag">Tooling</span>
+            <span class="tag">Utility</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2 class="section-title">About</h2>
+      <p class="section-copy">
+        I’m Joel Dickinson, a developer focused on building useful tools, learning fast, and improving through real projects.
+        I like practical software, clean interfaces, and ideas that actually get shipped.
+      </p>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title">Links</h2>
+      <div class="projects">
+        <article class="card">
+          <h3>GitHub</h3>
+          <p>
+            <a href="https://github.com/denartes" target="_blank" rel="noopener noreferrer">github.com/denartes</a>
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>LinkedIn</h3>
+          <p>Add your LinkedIn link here later.</p>
+        </article>
+
+        <article class="card">
+          <h3>Email</h3>
+          <p>Add a contact email here later if you want one public.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2026 Joel Dickinson / denartes
+    </div>
+  </footer>
+</body>
+</html>
