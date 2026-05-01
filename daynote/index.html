@@ -3,16 +3,118 @@
 <head>
   <title>Daynote</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f0f13;
+      color: #eaeaf0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-top: 60px;
+      margin-bottom: 60px;
+    }
+
+    .title {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #b0b0c0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .section {
+      margin-top: 60px;
+    }
+
+    .section h2 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .section p {
+      color: #c8c8d8;
+      line-height: 1.6;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      font-size: 14px;
+      color: #88889a;
+    }
+
+    a {
+      color: #8b5cf6;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .link-row {
+      margin-top: 20px;
+    }
+  </style>
 </head>
-<body style="font-family: sans-serif; padding: 24px;">
+<body>
 
-  <h1>Daynote</h1>
-  <p>Daynote is a personal productivity app.</p>
+  <div class="container">
 
-  <h2>Links</h2>
-  <ul>
-    <li><a href="./privacy/">Privacy Policy</a></li>
-  </ul>
+    <div class="hero">
+      <div class="title">Daynote</div>
+      <div class="subtitle">
+        A simple, focused daily planner for managing tasks, routines, and personal structure.
+      </div>
+      <div class="link-row">
+        <a href="./privacy/">Privacy Policy</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>What is Daynote?</h2>
+      <p>
+        Daynote is designed to help you stay organised without unnecessary complexity.
+        It combines task tracking, routine planning, and simple scheduling into a clean,
+        distraction-free experience.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Designed for clarity</h2>
+      <p>
+        Instead of overwhelming dashboards and cluttered views, Daynote focuses on giving
+        you a clear understanding of what needs to be done, when, and why.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Private by default</h2>
+      <p>
+        Your data stays on your device. Optional Google Drive sync is available if you want
+        backup and cross-device access, but nothing is stored on developer-controlled servers.
+      </p>
+    </div>
+
+    <div class="footer">
+      © Daynote · <a href="./privacy/">Privacy Policy</a>
+    </div>
+
+  </div>
 
 </body>
 </html>
