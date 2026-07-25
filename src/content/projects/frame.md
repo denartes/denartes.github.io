@@ -1,38 +1,34 @@
 ---
 name: "Frame"
-shortDescription: "An experimental project exploring structured content and interface patterns."
-status: "experimental"
-technologies: ["TypeScript", "Web Platform"]
+shortDescription: "A minimal Android app for customisable screen edge lighting without ads or battery drain."
+status: "active"
+technologies: ["Android", "Kotlin"]
 featured: false
 startDate: 2025-01-01
 lastUpdated: 2026-03-01
 ---
 
-<!-- PLACEHOLDER: This project page contains placeholder content. Update with accurate details when available. -->
+Frame is a simple Android app that adds a customisable border or glow effect around your phone screen.
 
-Frame is an experimental project exploring structured content and interface patterns.
+## Why I Built It
 
-## Overview
+I wanted edge lighting on my Android phone to personalise my screen, but every app I found on the Play Store had the same problems:
 
-Frame is an exploration of ideas around content structure, user interfaces, and information architecture. The project serves as a testbed for concepts that may eventually find their way into other tools.
+- **Riddled with ads and in-app purchases** — constantly interrupting the experience
+- **Overly complicated** — rainbow animations, pulse effects, and features I didn't need
+- **Battery drain** — all that animated complexity comes at a cost
 
-## Approach
+I just wanted a simple, static glow around my screen. So I built Frame.
 
-This project is deliberately experimental. It's a space for:
+## Features
 
-- Testing interface patterns and interactions
-- Exploring content organisation approaches
-- Prototyping ideas without the constraints of production requirements
-- Learning through building
+- Add a border or glow effect to your screen edges
+- Customise the colour
+- Adjust opacity
+- Control the size/thickness
+- Lightweight and battery-efficient
+- No ads, no in-app purchases
 
-## Status
+## Philosophy
 
-Frame is an ongoing experiment. It may not result in a public release, but insights from the work will inform other projects.
-
-## Notes
-
-Some experiments don't become products—they become understanding. Frame exists in this space: a workshop for ideas rather than a deliverable.
-
----
-
-*This is a placeholder project page. The project is experimental and details may change significantly.*
+Frame does one thing well. It's not trying to be a flashy edge lighting suite with dozens of animation modes. It's a minimal tool that puts a coloured border on your screen without draining your battery or asking you to watch ads.
