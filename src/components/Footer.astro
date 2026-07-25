@@ -1,0 +1,132 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="footer-inner container">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">denartes</a>
+    </div>
+    
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-section">
+        <h3>Content</h3>
+        <ul>
+          <li><a href="/blog/">Posts</a></li>
+          <li><a href="/projects/">Projects</a></li>
+          <li><a href="/tags/">Tags</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Links</h3>
+        <ul>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/rss.xml">RSS Feed</a></li>
+          <li><a href="https://github.com/denartes" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        </ul>
+      </div>
+    </nav>
+    
+    <div class="footer-bottom">
+      <p class="copyright">© {currentYear} Denartes. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-elevated);
+  }
+
+  .footer-inner {
+    padding-block: var(--space-12);
+    display: grid;
+    gap: var(--space-10);
+  }
+
+  @media (min-width: 768px) {
+    .footer-inner {
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: var(--space-12);
+    }
+
+    .footer-bottom {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .footer-brand {
+    max-width: 20rem;
+  }
+
+  .footer-logo {
+    display: inline-block;
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .footer-logo:hover {
+    color: var(--color-accent);
+  }
+
+  .footer-nav {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 480px) {
+    .footer-nav {
+      grid-template-columns: repeat(2, auto);
+    }
+  }
+
+  .footer-section h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-section li {
+    margin-bottom: var(--space-2);
+  }
+
+  .footer-section a {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    transition: color var(--transition-fast);
+  }
+
+  .footer-section a:hover {
+    color: var(--color-accent);
+  }
+
+  .footer-bottom {
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .copyright {
+    color: var(--color-text-subtle);
+    font-size: var(--text-sm);
+  }
+</style>

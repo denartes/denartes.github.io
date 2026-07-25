@@ -1,0 +1,123 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PostCard from '@components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return import.meta.env.PROD ? data.draft !== true : true;
+  });
+
+  // Get all unique tags
+  const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
+
+  return allTags.map((tag) => {
+    const filteredPosts = allPosts
+      .filter((post) => post.data.tags.includes(tag))
+      .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf());
+
+    return {
+      params: { tag },
+      props: { tag, posts: filteredPosts },
+    };
+  });
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout
+  title={`Posts tagged "${tag}"`}
+  description={`All posts tagged with "${tag}".`}
+>
+  <section class="tag-page">
+    <div class="container">
+      <header class="page-header">
+        <a href="/tags/" class="back-link">← All tags</a>
+        <h1>
+          <span class="tag-label">Tagged:</span>
+          <span class="tag-name">{tag}</span>
+        </h1>
+        <p class="post-count">
+          {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+        </p>
+      </header>
+
+      {posts.length > 0 ? (
+        <div class="posts-list">
+          {posts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>No posts with this tag.</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tag-page {
+    padding-block: var(--space-12);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-10);
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .page-header h1 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  .tag-label {
+    font-size: var(--text-2xl);
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  .tag-name {
+    color: var(--color-accent);
+  }
+
+  .post-count {
+    color: var(--color-text-subtle);
+    font-size: var(--text-sm);
+    margin-top: var(--space-2);
+  }
+
+  .posts-list {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .posts-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--space-16);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-muted);
+  }
+</style>
