@@ -1,0 +1,125 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+
+// Group by status
+const activeProjects = allProjects.filter((p) => p.data.status === 'active');
+const maintainedProjects = allProjects.filter((p) => p.data.status === 'maintained');
+const experimentalProjects = allProjects.filter((p) => p.data.status === 'experimental');
+const archivedProjects = allProjects.filter((p) => p.data.status === 'archived');
+const plannedProjects = allProjects.filter((p) => p.data.status === 'planned');
+
+// Sort each group by featured, then by last updated
+const sortProjects = (projects: typeof allProjects) =>
+  projects.sort((a, b) => {
+    if (a.data.featured && !b.data.featured) return -1;
+    if (!a.data.featured && b.data.featured) return 1;
+    return (b.data.lastUpdated?.valueOf() || 0) - (a.data.lastUpdated?.valueOf() || 0);
+  });
+
+const projectGroups = [
+  { title: 'Active Development', projects: sortProjects(activeProjects) },
+  { title: 'Maintained', projects: sortProjects(maintainedProjects) },
+  { title: 'Experimental', projects: sortProjects(experimentalProjects) },
+  { title: 'Planned', projects: sortProjects(plannedProjects) },
+  { title: 'Archived', projects: sortProjects(archivedProjects) },
+].filter((group) => group.projects.length > 0);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Software projects, tools, and experiments by Denartes."
+>
+  <section class="projects-index">
+    <div class="container">
+      <header class="page-header" data-platform>
+        <h1>Projects</h1>
+        <p class="page-description">
+          Software projects, tools, and experiments. Some are actively developed, some are maintained, and some are archived explorations.
+        </p>
+      </header>
+
+      {projectGroups.length > 0 ? (
+        <div class="project-groups">
+          {projectGroups.map((group) => (
+            <section class="project-group">
+              <h2>{group.title}</h2>
+              <div class="projects-grid">
+                {group.projects.map((project) => (
+                  <ProjectCard project={project} headingLevel="h3" />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>Projects coming soon.</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .projects-index {
+    padding-block: var(--space-12);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-10);
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--space-2);
+  }
+
+  .page-description {
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+    max-width: 50ch;
+  }
+
+  .project-groups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .project-group h2 {
+    font-size: var(--text-xl);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .projects-grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--space-16);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-muted);
+  }
+</style>

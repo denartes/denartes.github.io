@@ -1,0 +1,83 @@
+---
+import FormattedDate from './FormattedDate.astro';
+import TagList from './TagList.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { post, headingLevel = 'h2' } = Astro.props;
+const { title, description, publishedDate, tags, project } = post.data;
+const HeadingTag = headingLevel;
+const slug = post.id.replace(/\.(md|mdx)$/, '');
+---
+
+<article class="post-card" data-platform>
+  <a href={`/blog/${slug}/`} class="post-link">
+    <HeadingTag class="post-title">{title}</HeadingTag>
+  </a>
+  <p class="post-description">{description}</p>
+  <div class="post-meta">
+    <FormattedDate date={publishedDate} format="short" />
+    {project && (
+      <span class="project-link">
+        in <a href={`/projects/${project}/`}>{project}</a>
+      </span>
+    )}
+  </div>
+  {tags.length > 0 && <TagList tags={tags} />}
+</article>
+
+<style>
+  .post-card {
+    padding: var(--space-6);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: border-color var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .post-card:hover {
+    border-color: var(--color-accent-muted);
+    transform: translateY(-2px);
+  }
+
+  .post-link {
+    text-decoration: none;
+  }
+
+  .post-title {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+    transition: color var(--transition-fast);
+  }
+
+  .post-card:hover .post-title {
+    color: var(--color-accent);
+  }
+
+  .post-description {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    margin-bottom: var(--space-3);
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+    margin-bottom: var(--space-3);
+  }
+
+  .project-link a {
+    color: var(--color-accent-muted);
+  }
+</style>

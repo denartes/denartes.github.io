@@ -1,0 +1,25 @@
+{
+  "name": "denartes-site",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Denartes - Developer blog, projects, and technical writing",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.8.0",
+    "@astrojs/sitemap": "^3.3.0",
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/mdx": "^4.2.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.0",
+    "typescript": "^5.8.0",
+    "sharp": "^0.33.0"
+  }
+}

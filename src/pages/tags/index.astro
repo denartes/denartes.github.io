@@ -1,0 +1,115 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? data.draft !== true : true;
+});
+
+// Get all unique tags with counts
+const tagCounts = new Map<string, number>();
+allPosts.forEach((post) => {
+  post.data.tags.forEach((tag) => {
+    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  });
+});
+
+const sortedTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout
+  title="Tags"
+  description="Browse posts by topic."
+>
+  <section class="tags-page">
+    <div class="container">
+      <header class="page-header">
+        <h1>Tags</h1>
+        <p class="page-description">
+          Browse posts by topic.
+        </p>
+      </header>
+
+      {sortedTags.length > 0 ? (
+        <ul class="tags-list">
+          {sortedTags.map(([tag, count]) => (
+            <li>
+              <a href={`/tags/${tag}/`} class="tag-link">
+                <span class="tag-name">{tag}</span>
+                <span class="tag-count">{count}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="empty-state">
+          <p>No tags yet.</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tags-page {
+    padding-block: var(--space-12);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-10);
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--space-2);
+  }
+
+  .page-description {
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tag-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .tag-link:hover {
+    border-color: var(--color-accent);
+    background: var(--color-bg-subtle);
+  }
+
+  .tag-name {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .tag-count {
+    color: var(--color-text-subtle);
+    font-size: var(--text-sm);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--space-16);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-muted);
+  }
+</style>

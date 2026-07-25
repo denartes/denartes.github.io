@@ -1,0 +1,245 @@
+---
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Posts', href: '/blog/' },
+  { label: 'Projects', href: '/projects/' },
+  { label: 'About', href: '/about/' },
+  { label: 'GitHub', href: 'https://github.com/denartes', external: true },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header" data-platform>
+  <div class="header-inner container">
+    <a href="/" class="site-logo" aria-label="Denartes home">
+      <span class="logo-mark">D</span>
+      <span class="logo-text">denartes</span>
+    </a>
+    
+    <nav class="main-nav" aria-label="Main navigation">
+      <ul class="nav-list">
+        {navItems.map((item) => {
+          const isActive = !item.external && (item.href === '/' ? currentPath === '/' : currentPath.startsWith(item.href));
+          return (
+          <li>
+            <a
+              href={item.href}
+              class:list={['nav-link', { active: isActive }]}
+              {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            >
+              {item.label}
+              {item.external && (
+                <svg class="external-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+              )}
+            </a>
+          </li>
+        )})}
+      </ul>
+    </nav>
+    
+    <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+      <svg class="menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  
+  <nav id="mobile-menu" class="mobile-nav" aria-label="Mobile navigation">
+    <ul class="mobile-nav-list">
+      {navItems.map((item) => {
+        const isActive = !item.external && (item.href === '/' ? currentPath === '/' : currentPath.startsWith(item.href));
+        return (
+        <li>
+          <a
+            href={item.href}
+            class:list={['mobile-nav-link', { active: isActive }]}
+            {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+          >
+            {item.label}
+          </a>
+        </li>
+      )})}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6, 7, 11, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+  }
+
+  .site-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: var(--text-lg);
+  }
+
+  .logo-text {
+    letter-spacing: -0.02em;
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .main-nav {
+      display: block;
+    }
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: color var(--transition-fast), background var(--transition-fast);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text);
+    background: var(--color-bg-subtle);
+  }
+
+  .nav-link.active {
+    color: var(--color-accent);
+  }
+
+  .external-icon {
+    opacity: 0.5;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  @media (min-width: 768px) {
+    .mobile-menu-toggle {
+      display: none;
+    }
+  }
+
+  .mobile-menu-toggle .close-icon {
+    display: none;
+  }
+
+  .mobile-menu-toggle[aria-expanded="true"] .menu-icon {
+    display: none;
+  }
+
+  .mobile-menu-toggle[aria-expanded="true"] .close-icon {
+    display: block;
+  }
+
+  .mobile-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-bg-elevated);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-4);
+  }
+
+  .mobile-nav.open {
+    display: block;
+  }
+
+  .mobile-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-text-muted);
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active {
+    color: var(--color-text);
+    background: var(--color-bg-subtle);
+  }
+
+  .mobile-nav-link.active {
+    color: var(--color-accent);
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector('.mobile-menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    menu?.classList.toggle('open', !expanded);
+  });
+</script>

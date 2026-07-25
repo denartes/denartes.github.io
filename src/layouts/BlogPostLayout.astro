@@ -1,0 +1,172 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TableOfContents from '@components/TableOfContents.astro';
+import TagList from '@components/TagList.astro';
+import FormattedDate from '@components/FormattedDate.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { post, headings } = Astro.props;
+const { title, description, publishedDate, updatedDate, tags, coverImage, coverAlt, canonicalUrl, project, series, seriesOrder } = post.data;
+
+const hasToc = headings.length > 2;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalUrl={canonicalUrl}
+  type="article"
+  publishedTime={publishedDate}
+  modifiedTime={updatedDate}
+  tags={tags}
+>
+  <article class="blog-post">
+    <header class="post-header">
+      <div class="container">
+        {series && (
+          <div class="series-indicator">
+            Part {seriesOrder} of <span class="series-name">{series}</span>
+          </div>
+        )}
+        <h1>{title}</h1>
+        <p class="post-description">{description}</p>
+        <div class="post-meta">
+          <FormattedDate date={publishedDate} />
+          {updatedDate && (
+            <span class="updated">
+              (Updated <FormattedDate date={updatedDate} />)
+            </span>
+          )}
+        </div>
+        {tags.length > 0 && <TagList tags={tags} />}
+        {project && (
+          <div class="related-project">
+            Part of <a href={`/projects/${project}/`}>{project}</a>
+          </div>
+        )}
+      </div>
+    </header>
+
+    {coverImage && (
+      <div class="cover-image">
+        <img src={coverImage.src} alt={coverAlt || ''} />
+      </div>
+    )}
+
+    <div class="post-content-wrapper container">
+      {hasToc && (
+        <aside class="toc-sidebar">
+          <TableOfContents headings={headings} />
+        </aside>
+      )}
+      <div class="post-content prose">
+        <slot />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-post {
+    padding-block: var(--space-12);
+  }
+
+  .post-header {
+    margin-bottom: var(--space-10);
+    text-align: center;
+  }
+
+  .series-indicator {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-3);
+  }
+
+  .series-name {
+    color: var(--color-accent);
+  }
+
+  .post-header h1 {
+    margin-bottom: var(--space-4);
+    max-width: 20ch;
+    margin-inline: auto;
+  }
+
+  .post-description {
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+    max-width: 50ch;
+    margin-inline: auto;
+    margin-bottom: var(--space-4);
+  }
+
+  .post-meta {
+    color: var(--color-text-subtle);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+  }
+
+  .updated {
+    color: var(--color-text-subtle);
+  }
+
+  .related-project {
+    margin-top: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .cover-image {
+    max-width: var(--max-width-wide);
+    margin-inline: auto;
+    margin-bottom: var(--space-10);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .cover-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .post-content-wrapper {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 1024px) {
+    .post-content-wrapper {
+      grid-template-columns: 14rem minmax(0, 48rem) 1fr;
+    }
+
+    .toc-sidebar {
+      order: 0;
+      position: sticky;
+      top: var(--space-8);
+      max-height: calc(100vh - var(--space-16));
+      overflow-y: auto;
+    }
+
+    .post-content {
+      order: 1;
+      grid-column: 2;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .toc-sidebar {
+      display: none;
+    }
+
+    .post-content-wrapper {
+      max-width: var(--max-width-content);
+    }
+  }
+</style>

@@ -1,0 +1,92 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import '@/styles/prose.css';
+---
+
+<BaseLayout
+  title="About"
+  description="About Denartes - the development alias of Joel Dickinson."
+>
+  <section class="about-page">
+    <div class="container">
+      <article class="about-content" data-platform>
+        <h1>About</h1>
+        
+        <div class="prose">
+          <p>
+            <strong>Denartes</strong> is the development alias of Joel Dickinson.
+          </p>
+          
+          <p>
+            This site is a workshop for software projects, a notebook for technical writing, 
+            and an archive of experiments, development notes, and lessons learned along the way.
+          </p>
+          
+          <p>
+            The work here focuses on developer tools, productivity software, and the craft of 
+            building useful, well-considered software. Some projects are polished products, 
+            others are exploratory prototypes, and some are simply documentation of ideas 
+            that didn't work out—but were worth recording anyway.
+          </p>
+          
+          <h2>What you'll find here</h2>
+          
+          <ul>
+            <li>
+              <strong>Projects</strong> — Open source tools, applications, and libraries. 
+              Each project page explains what it does, its current status, and links to 
+              the source code.
+            </li>
+            <li>
+              <strong>Writing</strong> — Technical articles, development journals, release notes, 
+              and reflections on the craft. Posts range from detailed tutorials to brief notes 
+              on problems solved.
+            </li>
+            <li>
+              <strong>Experiments</strong> — Prototypes and explorations that may or may not 
+              become full projects. Some ideas need to be built to be understood.
+            </li>
+          </ul>
+          
+          <h2>Approach</h2>
+          
+          <p>
+            The projects and writing here reflect a preference for:
+          </p>
+          
+          <ul>
+            <li>Solving real problems over chasing trends</li>
+            <li>Simplicity and clarity over unnecessary complexity</li>
+            <li>Thoughtful design over feature accumulation</li>
+            <li>Learning in public and documenting the journey</li>
+          </ul>
+          
+          <h2>Connect</h2>
+          
+          <p>
+            The best way to follow the work is through the <a href="/blog/">writing</a> on this site 
+            or via the <a href="/rss.xml">RSS feed</a>.
+          </p>
+          
+          <p>
+            Source code for projects can be found on <a href="https://github.com/denartes" target="_blank" rel="noopener noreferrer">GitHub</a>.
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-page {
+    padding-block: var(--space-12);
+  }
+
+  .about-content {
+    max-width: var(--max-width-content);
+  }
+
+  .about-content h1 {
+    margin-bottom: var(--space-8);
+  }
+</style>

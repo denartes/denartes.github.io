@@ -1,0 +1,248 @@
+---
+/**
+ * PagePlatformer.astro
+ * 
+ * A hidden platformer Easter egg. The avatar sits on the footer
+ * and can be activated to jump around on page elements.
+ */
+---
+
+<!-- Avatar element - CSS-based for now, can be replaced with sprite later -->
+<div
+  id="platformer-avatar"
+  class="platformer-avatar"
+  tabindex="0"
+  role="button"
+  aria-label="Activate page platformer"
+  aria-pressed="false"
+  data-animation="idle"
+>
+  <div class="avatar-body">
+    <div class="avatar-head"></div>
+    <div class="avatar-torso"></div>
+    <div class="avatar-legs">
+      <div class="avatar-leg left"></div>
+      <div class="avatar-leg right"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Controls hint - shown briefly after activation -->
+<div id="platformer-controls" class="platformer-controls" aria-hidden="true">
+  <span class="key">A/D</span> move
+  <span class="key">W/Space</span> jump
+  <span class="key">Esc</span> exit
+</div>
+
+<style>
+  /* Avatar container - positioned absolutely in document coordinates */
+  .platformer-avatar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 24px;
+    z-index: 9999;
+    cursor: pointer;
+    pointer-events: auto;
+    /* Crisp pixel rendering */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    /* Smooth transform but instant position changes */
+    will-change: transform;
+    /* Start hidden until positioned */
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+  
+  .platformer-avatar.spawned {
+    opacity: 1;
+  }
+  
+  .platformer-avatar:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  
+  /* Hide on reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .platformer-avatar {
+      display: none;
+    }
+  }
+  
+  /* Hide on narrow touch devices */
+  @media (max-width: 767px) and (pointer: coarse) {
+    .platformer-avatar {
+      display: none;
+    }
+  }
+  
+  /* Avatar body structure - minimalist pixel style */
+  .avatar-body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .avatar-head {
+    width: 10px;
+    height: 8px;
+    background: var(--color-accent);
+    border-radius: 2px 2px 1px 1px;
+  }
+  
+  .avatar-torso {
+    width: 8px;
+    height: 8px;
+    background: var(--color-text-muted);
+    margin-top: 1px;
+  }
+  
+  .avatar-legs {
+    display: flex;
+    gap: 2px;
+    margin-top: 1px;
+  }
+  
+  .avatar-leg {
+    width: 3px;
+    height: 6px;
+    background: var(--color-text-subtle);
+  }
+  
+  /* Active state - subtle glow */
+  .platformer-avatar.active .avatar-head {
+    box-shadow: 0 0 4px var(--color-accent-glow);
+  }
+  
+  /* Animation states */
+  
+  /* Idle - subtle breathing animation */
+  .platformer-avatar[data-animation="idle"] .avatar-body {
+    animation: avatar-idle 2s ease-in-out infinite;
+  }
+  
+  @keyframes avatar-idle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-1px); }
+  }
+  
+  /* Running - leg animation */
+  .platformer-avatar[data-animation="run"] .avatar-leg.left {
+    animation: avatar-run-left 0.15s steps(2) infinite;
+  }
+  
+  .platformer-avatar[data-animation="run"] .avatar-leg.right {
+    animation: avatar-run-right 0.15s steps(2) infinite;
+  }
+  
+  @keyframes avatar-run-left {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+  }
+  
+  @keyframes avatar-run-right {
+    0% { transform: translateY(-2px); }
+    50% { transform: translateY(0); }
+  }
+  
+  /* Jump - compact pose */
+  .platformer-avatar[data-animation="jump"] .avatar-legs {
+    gap: 1px;
+  }
+  
+  .platformer-avatar[data-animation="jump"] .avatar-leg {
+    height: 4px;
+    transform: translateY(-1px);
+  }
+  
+  /* Fall - spread pose */
+  .platformer-avatar[data-animation="fall"] .avatar-legs {
+    gap: 4px;
+  }
+  
+  .platformer-avatar[data-animation="fall"] .avatar-leg {
+    height: 5px;
+  }
+  
+  /* Controls hint */
+  .platformer-controls {
+    position: fixed;
+    bottom: var(--space-4);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base);
+    white-space: nowrap;
+  }
+  
+  .platformer-controls.visible {
+    opacity: 1;
+  }
+  
+  .platformer-controls .key {
+    display: inline-block;
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.1em 0.4em;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    margin-right: 0.25em;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .platformer-controls {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { initPlatformer, getEngine } from '@/scripts/platformer';
+  
+  function setupPlatformer() {
+    const avatar = document.getElementById('platformer-avatar');
+    const controls = document.getElementById('platformer-controls');
+    
+    if (!avatar || !controls) return;
+    
+    try {
+      initPlatformer(avatar as HTMLElement, controls as HTMLElement);
+    } catch (error) {
+      // Fail silently - don't break the page
+      console.warn('Platformer initialization failed:', error);
+      avatar.style.display = 'none';
+    }
+  }
+  
+  // Initialize on DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupPlatformer);
+  } else {
+    setupPlatformer();
+  }
+  
+  // Handle Astro page transitions (View Transitions API)
+  document.addEventListener('astro:page-load', () => {
+    // Re-initialize on navigation
+    const engine = getEngine();
+    if (engine) {
+      // Respawn on footer for new page
+      engine.refreshPlatforms();
+    } else {
+      setupPlatformer();
+    }
+  });
+</script>
