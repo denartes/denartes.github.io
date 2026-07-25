@@ -1,55 +1,45 @@
 ---
 title: "Hello, World?"
-description: "The thinking behind this site, what you'll find here, and why I decided to build in public."
+description: "A quick introduction to the site and what I plan to share here."
 publishedDate: 2026-07-25
 tags: ["meta", "site"]
 draft: false
 ---
 
-Every developer eventually ends up with the same problem.
+I've been meaning to start a blog like this for a while.
 
-Projects are scattered across GitHub repositories. Notes live in random Markdown files. Solutions disappear into old chat logs. Experiments are forgotten the moment they're abandoned.
+Most of what I build or figure out ends up scattered across GitHub repos, half-finished notes, and old chat logs. This site is just a way to put some of that in one place.
 
-Denartes is my attempt to bring all of that together.
-
-Rather than treating a website as a portfolio or résumé, I wanted somewhere to document the software I build, the problems I solve, and the lessons I learn along the way. Some projects will become polished applications. Others will remain half-finished prototypes or experiments that ultimately go nowhere. Both are worth recording.
+Denartes isn't a company or a product. It's just the name I use online on places like GitHub and Reddit, and this site is an extension of that. The idea is simple: a technical blog where I can write about what I'm working on, share projects, and post thoughts when I have something worth saying.
 
 ## What you'll find here
 
-This site revolves around three things.
+Mostly, this site will be a mix of a few things:
 
 ### Projects
 
-Every significant project has its own page documenting what it is, why it exists, how it works, and where it's headed. Project pages are living documents rather than static showcases.
-
-The homepage highlights recently released projects automatically, reflecting what's actually being built rather than a manually curated list.
+I'll post about projects I'm building, how they work, what problems they solve, and sometimes where they went wrong. Some will be finished, some won't be, but both are worth writing about. There will be a tight coupling with repos.
 
 ### Posts
 
-Posts range from technical deep dives and implementation notes to release announcements, architecture decisions, debugging stories, and the occasional opinion piece.
-
-The goal isn't to publish on a schedule. It's to write whenever there's something worth documenting.
+This is where I'll write about technical problems, implementation details, things I learned, and whatever else feels useful or interesting enough to share.
 
 ### Experiments
 
-Not every idea deserves a polished release.
+Not everything turns into a polished project, and that's fine. Sometimes the failed ideas or rough prototypes are the most interesting part.
 
-Sometimes the interesting part is discovering why something doesn't work. Those projects belong here too.
+## Why make this?
 
-## Building in public
+Mostly so I have a place to keep track of things.
 
-One of the easiest ways to forget something is to solve it once and never write it down.
+Writing stuff down helps me think more clearly, and it also means I can come back to old ideas or solutions later instead of digging through repos and notes trying to remember what I did.
 
-Writing forces me to explain ideas clearly, preserve solutions for future reference, and leave a trail that might help someone else facing the same problem.
-
-If a post saves someone an afternoon of debugging, or a project sparks an idea for their own work, then publishing it was worthwhile.
+If any of it ends up being useful to someone else, even better.
 
 ## What's next?
 
-At the time of writing, this site is just getting started.
+Nothing too ambitious. I'll use this site to write about my projects, document what I'm learning, and share the occasional technical thought when it feels worth posting.
 
-Over the coming months I'll be documenting ongoing work, publishing release notes, writing about interesting technical problems, and slowly expanding the collection of projects.
+That's really it.
 
-Hopefully, over time, Denartes becomes less of a website and more of a development journal.
-
-Thanks for stopping by.
+Thanks for reading.
