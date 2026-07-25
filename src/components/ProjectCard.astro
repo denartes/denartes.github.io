@@ -20,7 +20,7 @@ const statusLabels: Record<string, string> = {
 };
 ---
 
-<article class:list={['project-card', { featured }]}>
+<article class:list={['project-card', { featured }]} data-platform>
   <div class="project-header">
     <span class="status-badge" data-status={status}>
       {statusLabels[status] || status}

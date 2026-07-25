@@ -21,7 +21,7 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 >
   <section class="blog-index">
     <div class="container">
-      <header class="page-header">
+      <header class="page-header" data-platform>
         <h1>Posts</h1>
         <p class="page-description">
           Technical articles, project updates, development notes, and experiments.

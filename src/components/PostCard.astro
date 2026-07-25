@@ -14,7 +14,7 @@ const HeadingTag = headingLevel;
 const slug = post.id.replace(/\.(md|mdx)$/, '');
 ---
 
-<article class="post-card">
+<article class="post-card" data-platform>
   <a href={`/blog/${slug}/`} class="post-link">
     <HeadingTag class="post-title">{title}</HeadingTag>
   </a>
