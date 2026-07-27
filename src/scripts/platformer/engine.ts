@@ -351,11 +351,18 @@ export class PlatformerEngine {
     
     // Platform collision (one-way) - skip during drop ignore window
     if (timing.dropIgnoreTime <= 0) {
+      // During wrap-around fall, only allow landing on footer
+      let platformsToCheck = platforms;
+      if (timing.wrapAroundFalling) {
+        const footer = findFooterPlatform(platforms);
+        platformsToCheck = footer ? [footer] : [];
+      }
+      
       const collision = checkPlatformCollision(
         avatar,
         prevY,
         AVATAR_SIZE,
-        platforms,
+        platformsToCheck,
         physics
       );
       
@@ -365,6 +372,7 @@ export class PlatformerEngine {
         avatar.grounded = true;
         timing.jumpConsumed = false;
         timing.doubleJumpUsed = false;
+        timing.wrapAroundFalling = false; // Clear wrap-around flag on landing
       } else if (avatar.grounded) {
         // Check if still on platform (walking off edge)
         const stillOnPlatform = isStandingOnPlatform(
@@ -379,10 +387,23 @@ export class PlatformerEngine {
       }
     }
     
-    // Respawn if fallen below document
+    // Wrap around if fallen below document - teleport to top and fall to footer
     const docHeight = getDocumentHeight();
-    if (avatar.y > docHeight + 200) {
-      this.spawnOnFooter();
+    const viewportBottom = window.scrollY + window.innerHeight;
+    const farBelowViewport = avatar.y > viewportBottom + 200;
+    const belowDocument = avatar.y + AVATAR_SIZE.height > docHeight;
+    
+    if (farBelowViewport || belowDocument) {
+      // Keep horizontal position, teleport to top of document
+      avatar.y = 0;
+      avatar.vy = 100; // Start with some downward velocity to ensure falling
+      avatar.grounded = false;
+      
+      // Set flag to only allow landing on footer
+      timing.wrapAroundFalling = true;
+      
+      // Scroll to top to show the avatar
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
     
     // Prevent going off the left side
@@ -617,6 +638,7 @@ export class PlatformerEngine {
       jumpConsumed: false,
       doubleJumpUsed: false,
       dropIgnoreTime: 0,
+      wrapAroundFalling: false,
     };
   }
 }

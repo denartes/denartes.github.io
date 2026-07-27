@@ -84,6 +84,8 @@ export interface TimingState {
   doubleJumpUsed: boolean;
   /** Time remaining to ignore platform collisions after dropping (ms). */
   dropIgnoreTime: number;
+  /** Whether avatar is falling from a wrap-around (should fall to footer). */
+  wrapAroundFalling: boolean;
 }
 
 /** Platformer game state. */
