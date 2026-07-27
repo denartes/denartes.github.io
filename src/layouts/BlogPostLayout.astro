@@ -3,6 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import TableOfContents from '@components/TableOfContents.astro';
 import TagList from '@components/TagList.astro';
 import FormattedDate from '@components/FormattedDate.astro';
+import Giscus from '@components/Giscus.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const { post, headings } = Astro.props;
-const { title, description, publishedDate, updatedDate, tags, coverImage, coverAlt, canonicalUrl, project, series, seriesOrder } = post.data;
+const { title, description, publishedDate, updatedDate, tags, coverImage, coverAlt, canonicalUrl, project, series, seriesOrder, comments } = post.data;
 
 const hasToc = headings.length > 2;
 ---
@@ -68,6 +69,12 @@ const hasToc = headings.length > 2;
         <slot />
       </div>
     </div>
+
+    {comments !== false && (
+      <div class="comments-section container">
+        <Giscus />
+      </div>
+    )}
   </article>
 </BaseLayout>
 
