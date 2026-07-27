@@ -205,7 +205,7 @@ function truncateBody(body: string, maxLength: number = 100): string {
           ) : (
             <p class="empty-state">Nothing here yet.</p>
           )}
-          <a href="/blog/" class="see-more">All posts →</a>
+          <a href="/blog/" class="see-more">All posts</a>
         </section>
       </main>
 
@@ -461,6 +461,7 @@ function truncateBody(body: string, maxLength: number = 100): string {
     margin-top: var(--space-4);
     color: var(--color-text-subtle);
     font-size: var(--text-sm);
+    text-decoration: underline !important;
   }
 
   .see-more:hover {
