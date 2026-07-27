@@ -52,6 +52,10 @@ export interface PhysicsConfig {
   jumpBuffer: number;
   /** Small tolerance for platform landing detection. */
   collisionTolerance: number;
+  /** Velocity threshold for apex detection (pixels/s). */
+  apexVelocityThreshold: number;
+  /** Double jump velocity multiplier. */
+  doubleJumpMultiplier: number;
 }
 
 /** Input state for current frame. */
@@ -64,6 +68,8 @@ export interface InputState {
   jumpPressed: boolean;
   /** Jump being held. */
   jumpHeld: boolean;
+  /** Down pressed this frame (for drop-through). */
+  downPressed: boolean;
 }
 
 /** Engine timing state. */
@@ -74,6 +80,10 @@ export interface TimingState {
   timeSinceJumpPressed: number;
   /** Whether jump has been consumed (prevent multi-jump). */
   jumpConsumed: boolean;
+  /** Whether double jump has been used this airtime. */
+  doubleJumpUsed: boolean;
+  /** Time remaining to ignore platform collisions after dropping (ms). */
+  dropIgnoreTime: number;
 }
 
 /** Platformer game state. */

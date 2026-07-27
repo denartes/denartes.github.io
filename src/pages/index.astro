@@ -150,13 +150,13 @@ function truncateBody(body: string, maxLength: number = 100): string {
 ---
 
 <BaseLayout title="Denartes">
-  <section class="releases-hero" data-platform>
+  <section class="releases-hero">
     <div class="container">
       <h2 class="releases-title">Recent Releases</h2>
       {recentReleases.length > 0 ? (
         <div class="releases-grid">
           {recentReleases.map((release) => (
-            <a href={release.html_url} class="release-card" data-platform target="_blank" rel="noopener noreferrer">
+            <a href={release.html_url} class="release-card" target="_blank" rel="noopener noreferrer">
               <div class="release-header">
                 <span class="release-repo">{release.repository.name}</span>
                 <span class="release-tag">{release.tag_name}</span>

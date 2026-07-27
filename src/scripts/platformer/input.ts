@@ -9,16 +9,18 @@ import type { InputState } from './types';
 const LEFT_KEYS = new Set(['KeyA', 'ArrowLeft']);
 const RIGHT_KEYS = new Set(['KeyD', 'ArrowRight']);
 const JUMP_KEYS = new Set(['KeyW', 'ArrowUp', 'Space']);
+const DOWN_KEYS = new Set(['KeyS', 'ArrowDown']);
 const EXIT_KEY = 'Escape';
 
 /** All game keys that should prevent default when active. */
-const GAME_KEYS = new Set([...LEFT_KEYS, ...RIGHT_KEYS, ...JUMP_KEYS]);
+const GAME_KEYS = new Set([...LEFT_KEYS, ...RIGHT_KEYS, ...JUMP_KEYS, ...DOWN_KEYS]);
 
 export class InputHandler {
   private leftHeld = false;
   private rightHeld = false;
   private jumpHeld = false;
   private jumpPressedThisFrame = false;
+  private downPressedThisFrame = false;
   
   private active = false;
   private onExit: (() => void) | null = null;
@@ -62,10 +64,12 @@ export class InputHandler {
       right: this.rightHeld,
       jumpPressed: this.jumpPressedThisFrame,
       jumpHeld: this.jumpHeld,
+      downPressed: this.downPressedThisFrame,
     };
     
     // Clear single-frame flags
     this.jumpPressedThisFrame = false;
+    this.downPressedThisFrame = false;
     
     return state;
   }
@@ -103,6 +107,9 @@ export class InputHandler {
       this.jumpHeld = true;
       this.jumpPressedThisFrame = true;
     }
+    if (DOWN_KEYS.has(e.code)) {
+      this.downPressedThisFrame = true;
+    }
   }
   
   private handleKeyUp(e: KeyboardEvent): void {
@@ -124,5 +131,6 @@ export class InputHandler {
     this.rightHeld = false;
     this.jumpHeld = false;
     this.jumpPressedThisFrame = false;
+    this.downPressedThisFrame = false;
   }
 }

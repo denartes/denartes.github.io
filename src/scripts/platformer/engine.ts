@@ -30,6 +30,8 @@ const DEFAULT_PHYSICS: PhysicsConfig = {
   coyoteTime: 100,
   jumpBuffer: 120,
   collisionTolerance: 4,
+  apexVelocityThreshold: 200,
+  doubleJumpMultiplier: 0.85,
 };
 
 /** Avatar dimensions. */
@@ -64,6 +66,10 @@ export class PlatformerEngine {
   
   private resizeObserver: ResizeObserver | null = null;
   private platformRefreshScheduled = false;
+  private lastPlatformRefresh = 0;
+  
+  /** How often to refresh platforms during gameplay (ms) */
+  private static readonly PLATFORM_REFRESH_INTERVAL = 500;
   
   constructor() {
     this.physics = { ...DEFAULT_PHYSICS };
@@ -137,7 +143,7 @@ export class PlatformerEngine {
       // Ignore storage errors
     }
     
-    // Show controls hint briefly
+    // Show controls hint
     this.showControlsHint();
     
     // Start input capture
@@ -145,6 +151,7 @@ export class PlatformerEngine {
     
     // Start game loop
     this.lastTime = performance.now();
+    this.lastPlatformRefresh = this.lastTime;
     this.accumulator = 0;
     this.animationFrameId = requestAnimationFrame(this.gameLoop);
     
@@ -159,12 +166,6 @@ export class PlatformerEngine {
     
     this.state.active = false;
     
-    // Stop game loop
-    if (this.animationFrameId !== null) {
-      cancelAnimationFrame(this.animationFrameId);
-      this.animationFrameId = null;
-    }
-    
     // Stop input capture
     this.input.deactivate();
     
@@ -175,13 +176,55 @@ export class PlatformerEngine {
     if (this.avatarElement) {
       this.avatarElement.classList.remove('active');
       this.avatarElement.setAttribute('aria-pressed', 'false');
+      this.avatarElement.blur(); // Remove focus to hide outline
     }
     
-    // Reset velocity but keep position
-    this.state.avatar.vx = 0;
-    this.state.avatar.vy = 0;
-    this.state.avatar.animation = 'idle';
-    this.renderAvatar();
+    // Start falling animation back to footer
+    this.state.avatar.grounded = false;
+    this.state.timing.dropIgnoreTime = 150; // Pass through current platform
+    this.fallToFooter();
+  }
+  
+  /** Animate falling back to the footer after deactivation. */
+  private fallToFooter(): void {
+    const footer = findFooterPlatform(this.state.platforms);
+    const footerY = footer ? footer.top - AVATAR_SIZE.height : getDocumentHeight();
+    
+    const fall = () => {
+      const { avatar } = this.state;
+      
+      // Apply gravity
+      avatar.vy += this.physics.gravity * (1 / 60);
+      avatar.y += avatar.vy * (1 / 60);
+      
+      // Update animation
+      avatar.animation = 'fall';
+      this.renderAvatar();
+      
+      // Check if landed on footer
+      if (avatar.y >= footerY) {
+        avatar.y = footerY;
+        avatar.vy = 0;
+        avatar.grounded = true;
+        avatar.animation = 'idle';
+        this.renderAvatar();
+        
+        // Stop the animation frame
+        if (this.animationFrameId !== null) {
+          cancelAnimationFrame(this.animationFrameId);
+          this.animationFrameId = null;
+        }
+        return;
+      }
+      
+      this.animationFrameId = requestAnimationFrame(fall);
+    };
+    
+    // Cancel existing loop and start fall animation
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
+    this.animationFrameId = requestAnimationFrame(fall);
   }
   
   /** Main game loop. */
@@ -190,6 +233,12 @@ export class PlatformerEngine {
     
     const deltaTime = currentTime - this.lastTime;
     this.lastTime = currentTime;
+    
+    // Periodically refresh platforms to catch dynamically loaded content
+    if (currentTime - this.lastPlatformRefresh > PlatformerEngine.PLATFORM_REFRESH_INTERVAL) {
+      this.refreshPlatforms();
+      this.lastPlatformRefresh = currentTime;
+    }
     
     // Cap delta time to prevent spiral of death
     const cappedDelta = Math.min(deltaTime, 100);
@@ -264,11 +313,31 @@ export class PlatformerEngine {
     const hasJumpBuffer = timing.timeSinceJumpPressed < physics.jumpBuffer;
     const canJump = (avatar.grounded || canCoyoteJump) && !timing.jumpConsumed;
     
+    // Apex jump - can chain indefinitely if timing is right
+    const atApex = !avatar.grounded && Math.abs(avatar.vy) < physics.apexVelocityThreshold;
+    const canApexJump = atApex && input.jumpPressed;
+    
     if (canJump && hasJumpBuffer) {
       avatar.vy = physics.jumpVelocity;
       avatar.grounded = false;
       timing.jumpConsumed = true;
-      timing.timeSinceGrounded = physics.coyoteTime; // Prevent double jump
+      timing.timeSinceGrounded = physics.coyoteTime; // Prevent double jump from coyote
+    } else if (canApexJump) {
+      // Apex jump with slightly reduced power
+      avatar.vy = physics.jumpVelocity * physics.doubleJumpMultiplier;
+    }
+    
+    // Drop through platform
+    if (avatar.grounded && input.downPressed) {
+      avatar.grounded = false;
+      avatar.y += 4; // Push through platform
+      timing.timeSinceGrounded = physics.coyoteTime; // Prevent immediate coyote jump
+      timing.dropIgnoreTime = 150; // Ignore collisions briefly
+    }
+    
+    // Update drop ignore timer
+    if (timing.dropIgnoreTime > 0) {
+      timing.dropIgnoreTime -= dt;
     }
     
     // Apply gravity
@@ -280,30 +349,33 @@ export class PlatformerEngine {
     avatar.x += avatar.vx * dtSeconds;
     avatar.y += avatar.vy * dtSeconds;
     
-    // Platform collision (one-way)
-    const collision = checkPlatformCollision(
-      avatar,
-      prevY,
-      AVATAR_SIZE,
-      platforms,
-      physics
-    );
-    
-    if (collision.grounded && collision.landingY !== null) {
-      avatar.y = collision.landingY;
-      avatar.vy = 0;
-      avatar.grounded = true;
-      timing.jumpConsumed = false;
-    } else if (avatar.grounded) {
-      // Check if still on platform (walking off edge)
-      const stillOnPlatform = isStandingOnPlatform(
+    // Platform collision (one-way) - skip during drop ignore window
+    if (timing.dropIgnoreTime <= 0) {
+      const collision = checkPlatformCollision(
         avatar,
+        prevY,
         AVATAR_SIZE,
         platforms,
         physics
       );
-      if (!stillOnPlatform) {
-        avatar.grounded = false;
+      
+      if (collision.grounded && collision.landingY !== null) {
+        avatar.y = collision.landingY;
+        avatar.vy = 0;
+        avatar.grounded = true;
+        timing.jumpConsumed = false;
+        timing.doubleJumpUsed = false;
+      } else if (avatar.grounded) {
+        // Check if still on platform (walking off edge)
+        const stillOnPlatform = isStandingOnPlatform(
+          avatar,
+          AVATAR_SIZE,
+          platforms,
+          physics
+        );
+        if (!stillOnPlatform) {
+          avatar.grounded = false;
+        }
       }
     }
     
@@ -455,6 +527,9 @@ export class PlatformerEngine {
     // Also listen for window resize
     window.addEventListener('resize', () => this.schedulePlatformRefresh());
     
+    // Listen for scroll to update platforms (for auto-detected elements)
+    window.addEventListener('scroll', () => this.schedulePlatformRefresh(), { passive: true });
+    
     // Listen for fonts loading
     document.fonts.ready.then(() => this.schedulePlatformRefresh());
   }
@@ -495,16 +570,11 @@ export class PlatformerEngine {
     }
   }
   
-  /** Show controls hint briefly. */
+  /** Show controls hint until game ends. */
   private showControlsHint(): void {
     if (!this.controlsHint) return;
     
     this.controlsHint.classList.add('visible');
-    
-    // Hide after delay
-    setTimeout(() => {
-      this.hideControlsHint();
-    }, 3000);
   }
   
   /** Hide controls hint. */
@@ -545,6 +615,8 @@ export class PlatformerEngine {
       timeSinceGrounded: 0,
       timeSinceJumpPressed: Infinity,
       jumpConsumed: false,
+      doubleJumpUsed: false,
+      dropIgnoreTime: 0,
     };
   }
 }

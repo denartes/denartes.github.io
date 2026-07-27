@@ -31,6 +31,7 @@
 <div id="platformer-controls" class="platformer-controls" aria-hidden="true">
   <span class="key">A/D</span> move
   <span class="key">W/Space</span> jump
+  <span class="key">S</span> drop
   <span class="key">Esc</span> exit
 </div>
 
@@ -62,6 +63,10 @@
   .platformer-avatar:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+  }
+  
+  .platformer-avatar.active:focus-visible {
+    outline: none;
   }
   
   /* Hide on reduced motion */
@@ -120,14 +125,15 @@
   
   /* Animation states */
   
-  /* Idle - subtle breathing animation */
+  /* Idle - occasional hop to hint at interactivity */
   .platformer-avatar[data-animation="idle"] .avatar-body {
-    animation: avatar-idle 2s ease-in-out infinite;
+    animation: avatar-idle 12s ease-in-out infinite;
   }
   
   @keyframes avatar-idle {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-1px); }
+    0%, 90%, 100% { transform: translateY(0); }
+    93% { transform: translateY(-4px); }
+    96% { transform: translateY(0); }
   }
   
   /* Running - leg animation */
