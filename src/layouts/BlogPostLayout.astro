@@ -67,14 +67,9 @@ const hasToc = headings.length > 2;
       )}
       <div class="post-content prose">
         <slot />
+        {comments !== false && <Giscus />}
       </div>
     </div>
-
-    {comments !== false && (
-      <div class="comments-section container">
-        <Giscus />
-      </div>
-    )}
   </article>
 </BaseLayout>
 
