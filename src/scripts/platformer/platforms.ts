@@ -1,35 +1,130 @@
 /**
  * Platform detection and collision handling.
- * Only elements marked with data-platform are collidable.
+ * Detects both data-platform elements and common page elements.
  */
 
 import type { Platform, AvatarState, AvatarSize, PhysicsConfig } from './types';
 
-const PLATFORM_SELECTOR = '[data-platform]';
+/** Elements explicitly marked as platforms */
+const EXPLICIT_PLATFORM_SELECTOR = '[data-platform]';
+
+/** Auto-detected elements that make good platforms - use element bounds */
+const AUTO_PLATFORM_SELECTORS = [
+  // Block text elements - headings work well as solid platforms
+  'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+  // Code
+  'code',
+  // Images
+  'img',
+  '.bio-avatar',
+];
+
+/** Inline elements where we measure actual text content bounds */
+const INLINE_TEXT_SELECTORS = [
+  'p',
+  'a',
+  'strong', 'em', 'b', 'i',
+  'label',
+  'time',
+];
+
+/** Minimum dimensions for auto-detected platforms */
+const MIN_WIDTH = 40;
+const MIN_HEIGHT = 16;
+
+/**
+ * Get the bounding rect of the actual text content inside an element.
+ */
+function getTextContentRect(element: Element): DOMRect | null {
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  const rects = range.getClientRects();
+  
+  if (rects.length === 0) return null;
+  
+  // Combine all text rects into one bounding rect
+  let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
+  
+  for (const rect of rects) {
+    if (rect.width <= 0 || rect.height <= 0) continue;
+    left = Math.min(left, rect.left);
+    top = Math.min(top, rect.top);
+    right = Math.max(right, rect.right);
+    bottom = Math.max(bottom, rect.bottom);
+  }
+  
+  if (left === Infinity) return null;
+  
+  return new DOMRect(left, top, right - left, bottom - top);
+}
 
 /**
  * Scan the DOM for platform elements and compute their document coordinates.
  */
 export function scanPlatforms(): Platform[] {
-  const elements = document.querySelectorAll(PLATFORM_SELECTOR);
   const platforms: Platform[] = [];
+  const seen = new Set<Element>();
   
   const scrollX = window.scrollX;
   const scrollY = window.scrollY;
+  const viewportHeight = window.innerHeight;
+  const viewportTop = scrollY - viewportHeight; // Buffer above
+  const viewportBottom = scrollY + viewportHeight * 2; // Buffer below
   
-  for (const element of elements) {
-    const rect = element.getBoundingClientRect();
+  // Helper to add a platform from a rect
+  const addPlatformFromRect = (element: Element, rect: DOMRect) => {
+    if (seen.has(element)) return;
+    seen.add(element);
     
     // Skip elements with no size
-    if (rect.width <= 0 || rect.height <= 0) continue;
+    if (rect.width <= 0 || rect.height <= 0) return;
+    
+    // Skip auto-detected elements that are too small
+    if (!element.hasAttribute('data-platform')) {
+      if (rect.width < MIN_WIDTH || rect.height < MIN_HEIGHT) return;
+    }
+    
+    const top = rect.top + scrollY;
+    const bottom = rect.bottom + scrollY;
+    
+    // Skip elements far outside the viewport buffer
+    if (bottom < viewportTop || top > viewportBottom) return;
     
     platforms.push({
       element,
       left: rect.left + scrollX,
       right: rect.right + scrollX,
-      top: rect.top + scrollY,
-      bottom: rect.bottom + scrollY,
+      top: top,
+      bottom: bottom,
     });
+  };
+  
+  // Add explicit data-platform elements
+  const explicitElements = document.querySelectorAll(EXPLICIT_PLATFORM_SELECTOR);
+  for (const element of explicitElements) {
+    addPlatformFromRect(element, element.getBoundingClientRect());
+  }
+  
+  // Add auto-detected block elements (use element bounds)
+  const autoSelector = AUTO_PLATFORM_SELECTORS.join(', ');
+  const autoElements = document.querySelectorAll(autoSelector);
+  for (const element of autoElements) {
+    if (element.closest('[data-platform]')) continue;
+    if (element.closest('.platformer-avatar')) continue;
+    addPlatformFromRect(element, element.getBoundingClientRect());
+  }
+  
+  // Add inline text elements (use actual text bounds)
+  const inlineSelector = INLINE_TEXT_SELECTORS.join(', ');
+  const inlineElements = document.querySelectorAll(inlineSelector);
+  for (const element of inlineElements) {
+    if (element.closest('[data-platform]')) continue;
+    if (element.closest('.platformer-avatar')) continue;
+    
+    const textRect = getTextContentRect(element);
+    if (textRect) {
+      addPlatformFromRect(element, textRect);
+    }
   }
   
   return platforms;
