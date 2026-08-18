@@ -72,7 +72,7 @@ export function scanPlatforms(): Platform[] {
   const viewportBottom = scrollY + viewportHeight * 2; // Buffer below
   
   // Helper to add a platform from a rect
-  const addPlatformFromRect = (element: Element, rect: DOMRect) => {
+  const addPlatformFromRect = (element: Element, rect: DOMRect, skipViewportCheck = false) => {
     if (seen.has(element)) return;
     seen.add(element);
     
@@ -87,8 +87,8 @@ export function scanPlatforms(): Platform[] {
     const top = rect.top + scrollY;
     const bottom = rect.bottom + scrollY;
     
-    // Skip elements far outside the viewport buffer
-    if (bottom < viewportTop || top > viewportBottom) return;
+    // Skip elements far outside the viewport buffer (unless explicitly including)
+    if (!skipViewportCheck && (bottom < viewportTop || top > viewportBottom)) return;
     
     platforms.push({
       element,
@@ -98,6 +98,12 @@ export function scanPlatforms(): Platform[] {
       bottom: bottom,
     });
   };
+  
+  // Always include footer element regardless of viewport position (for spawning)
+  const footerElement = document.querySelector('footer, .site-footer, [data-platform="footer"]');
+  if (footerElement) {
+    addPlatformFromRect(footerElement, footerElement.getBoundingClientRect(), true);
+  }
   
   // Add explicit data-platform elements
   const explicitElements = document.querySelectorAll(EXPLICIT_PLATFORM_SELECTOR);

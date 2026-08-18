@@ -61,6 +61,7 @@ export class PlatformerEngine {
   private controlsHint: HTMLElement | null = null;
   
   private animationFrameId: number | null = null;
+  private footerTrackingId: number | null = null;
   private lastTime = 0;
   private accumulator = 0;
   
@@ -117,6 +118,7 @@ export class PlatformerEngine {
   /** Clean up resources. */
   destroy(): void {
     this.deactivate();
+    this.stopFooterTracking();
     this.resizeObserver?.disconnect();
   }
   
@@ -124,6 +126,9 @@ export class PlatformerEngine {
   activate(): void {
     if (this.state.active) return;
     if (!this.avatarElement) return;
+    
+    // Stop tracking footer - we're now in gameplay mode
+    this.stopFooterTracking();
     
     // Refresh platforms before starting
     this.refreshPlatforms();
@@ -214,6 +219,9 @@ export class PlatformerEngine {
           cancelAnimationFrame(this.animationFrameId);
           this.animationFrameId = null;
         }
+        
+        // Resume tracking footer position
+        this.startFooterTracking();
         return;
       }
       
@@ -522,19 +530,82 @@ export class PlatformerEngine {
   private waitForReadyAndSpawn(): void {
     // Wait for fonts to load
     document.fonts.ready.then(() => {
-      // Additional small delay to ensure layout is complete
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          this.spawnOnFooter();
-          this.renderAvatar();
-          
-          // Make avatar visible
-          if (this.avatarElement) {
-            this.avatarElement.classList.add('spawned');
-          }
-        });
-      });
+      // Wait for window load event (ensures images, iframes, etc. are loaded)
+      const doSpawn = () => {
+        // Additional delay to let dynamic content (like Giscus) settle
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              this.spawnOnFooter();
+              this.renderAvatar();
+              
+              // Make avatar visible
+              if (this.avatarElement) {
+                this.avatarElement.classList.add('spawned');
+              }
+              
+              // Start tracking footer position until game is activated
+              this.startFooterTracking();
+            });
+          });
+        }, 500); // Wait for dynamic content like Giscus to load
+      };
+      
+      if (document.readyState === 'complete') {
+        doSpawn();
+      } else {
+        window.addEventListener('load', doSpawn, { once: true });
+      }
     });
+  }
+  
+  /** Start continuously tracking the footer position (keeps avatar locked to footer). */
+  private startFooterTracking(): void {
+    // Don't track if game is active
+    if (this.state.active) return;
+    
+    // Already tracking
+    if (this.footerTrackingId !== null) return;
+    
+    const trackFooter = () => {
+      // Stop if game became active
+      if (this.state.active) {
+        this.footerTrackingId = null;
+        return;
+      }
+      
+      // Get current footer position
+      const footerElement = document.querySelector('footer, .site-footer, [data-platform="footer"]');
+      if (footerElement) {
+        const rect = footerElement.getBoundingClientRect();
+        const footerTop = rect.top + window.scrollY;
+        const footerCenterX = rect.left + window.scrollX + rect.width / 2;
+        
+        // Update avatar position to stay on footer
+        this.state.avatar.x = footerCenterX - AVATAR_SIZE.width / 2;
+        this.state.avatar.y = footerTop - AVATAR_SIZE.height;
+        this.renderAvatar();
+      }
+      
+      this.footerTrackingId = requestAnimationFrame(trackFooter);
+    };
+    
+    this.footerTrackingId = requestAnimationFrame(trackFooter);
+  }
+  
+  /** Stop tracking the footer position. */
+  private stopFooterTracking(): void {
+    if (this.footerTrackingId !== null) {
+      cancelAnimationFrame(this.footerTrackingId);
+      this.footerTrackingId = null;
+    }
+  }
+  
+  /** Get the current footer top position. */
+  private getFooterTop(): number | null {
+    const footerElement = document.querySelector('footer, .site-footer, [data-platform="footer"]');
+    if (!footerElement) return null;
+    return footerElement.getBoundingClientRect().top + window.scrollY;
   }
   
   /** Set up resize observer for platform updates. */
