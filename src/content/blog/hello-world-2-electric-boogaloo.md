@@ -3,7 +3,7 @@ title: "Hello World 2: Electric Boogaloo"
 description: "Why I built this site, why I chose GitHub and Astro, and how I've tried to tie everything together."
 publishedDate: 2026-08-09
 tags: ["meta", "site"]
-draft: true
+draft: false
 comments: true
 ---
 
