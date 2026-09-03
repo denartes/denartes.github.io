@@ -1,0 +1,43 @@
+---
+import { Code } from 'astro:components';
+import type { CodeLanguage } from 'astro';
+
+interface Props {
+  code: string;
+  language: CodeLanguage;
+}
+
+const { code, language } = Astro.props;
+const languageLabel = typeof language === 'string' ? language : 'Code';
+---
+
+<div class="code-snippet">
+  <div class="code-snippet-label">{languageLabel}</div>
+  <Code code={code} lang={language} />
+</div>
+
+<style>
+  .code-snippet {
+    position: relative;
+    margin: 1.5em 0;
+  }
+
+  .code-snippet-label {
+    position: absolute;
+    top: 0;
+    left: 0.75rem;
+    z-index: 1;
+    transform: translateY(-50%);
+    padding: 0 0.35rem;
+    background: var(--color-code-bg);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.2;
+    opacity: 0.8;
+  }
+
+  .code-snippet :global(pre) {
+    margin-top: 0;
+  }
+</style>

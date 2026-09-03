@@ -1,0 +1,120 @@
+---
+title: "I Wanted a Border Around My Screen"
+description: "A small Android project exploring persistent screen overlays and how little work is actually required to render a static border."
+publishedDate: 2026-09-03
+tags: ["android", "projects"]
+draft: true
+comments: true
+---
+
+import ContentImage from '@components/ContentImage.astro';
+import CodeSnippet from '@components/CodeSnippet.astro';
+
+I've always liked personalising the things I use every day. It's probably the same impulse that makes people cover their laptops in stickers or hang things from their backpacks. None of it makes the thing any more useful, but it makes it feel a little more like yours. My phone is no different.
+
+I'd played around with edge lighting on Android a few times before, usually using one of the many apps available on the Play Store. More recently I'd been spending a lot of time with the Pizza Boy Game Boy emulators, and really liked the vibrant colour themes they use. It got me thinking about doing something similar with the phone itself. I settled on yellow: a yellow case, yellow as the primary Android theme colour, and a yellow border around the display to tie the two together.
+
+So I went back to the edge lighting apps I'd used before. At first they seemed fine, but this time I was also spending long periods playing games through emulators, which was already fairly demanding on the battery. I started noticing that the battery wasn't draining nearly as quickly when I turned the edge lighting off.
+
+That sent me looking into what the app was actually doing. These apps are primarily designed for animated RGB borders, where you select a number of colours and configure how they move around the edge of the display. I'd selected a single yellow colour, so visually there was no animation at all. Underneath, though, it was still an animated border. I was continuously running an animation to display something that never moved.
+
+<ContentImage
+  src="/images/blog/example.jpg"
+  alt="Example of an edge lighting app"
+  width={300}
+  caption="An example of the edge lighting effect that inspired Frame."
+/>
+
+I wasn't particularly happy with the ads and in-app purchases either, especially for something I now wanted running permanently. At that point the thing I actually wanted seemed simple enough: a static yellow overlay that gets drawn once and stays there.
+
+That became Frame.
+
+<ContentImage
+  images={[
+    {
+      src: "/images/blog/frame1.jpg",
+      width: "300px"
+    },
+    {
+      src: "/images/blog/frame2.jpg",
+      width: "300px"
+    },
+  ]}
+  caption="The Frame app"
+/>
+
+<ContentImage
+  images={[
+    {
+      src: "/images/blog/pizzay-boy-noborder.jpg",
+      alt: "Pizza Boy without a border",
+      width: "300px"
+    },
+    {
+      src: "/images/blog/pizza-boy-border.jpg",
+      alt: "Pizza Boy with a border",
+      width: "300px"
+    },
+  ]}
+  caption="A comparison of the Pizza Boy emulator with and without the border."
+/>
+
+## How the border works
+
+Android provides the ability for an application to display content on top of other applications. It’s the same general mechanism used by things like floating controls and chat heads, and requires the user to explicitly grant permission for the app to draw over other apps.
+
+Frame creates its border as an application overlay using:
+
+<CodeSnippet
+  language="kotlin"
+  code={`WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY`}
+/>
+
+This allows Frame to create a transparent window that covers the display and remains visible above whatever application is currently being used. Frame then draws the border around the edges of that window, leaving everything inside it transparent.
+
+Simply putting a window over the entire display would normally create a fairly significant problem: it could intercept every tap intended for the application underneath it. Frame avoids that by making the overlay non-touchable:
+
+<CodeSnippet
+  language="kotlin"
+  code={`WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE`}
+/>
+
+Android therefore ignores the Frame window when routing touch input. The border remains visible above other applications, but because the overlay doesn't receive touch input, taps and gestures still interact with the application underneath.
+
+That was important because I didn't want Frame to behave like another interface layered on top of the phone. Once it's running, normal interaction with Android and other applications shouldn't be any different.
+
+A static overlay also means there is very little for Frame to actually do once the border has been drawn. The border only needs to be redrawn when something about it changes, rather than running an animation loop continually changing its appearance just to produce something that looks stationary.
+
+There is one limitation to this. Android blocks interaction with some security-sensitive interfaces while an overlay is visible. For example, I can use the Play Store normally with Frame running, but a purchase dialog won't accept input until the overlay is removed. The same applies to some Google account dialogs.
+
+Since I couldn't avoid that restriction, I made getting around it as painless as possible. While Frame is running it keeps a notification with a Pause button. Tapping it temporarily removes the border and changes the action to Resume, so I can interact with the blocked dialog and then turn the border straight back on without reopening Frame.
+
+<ContentImage
+  images={[
+    {
+      src: "/images/blog/frame-notification-pause.jpg",
+      alt: "Frame notification with pause control",
+      width: "300px"
+    },
+    {
+      src: "/images/blog/frame-notification-resume.jpg",
+      alt: "Frame notification with resume control",
+      width: "300px"
+    },
+  ]}
+  caption="Dropdown notification with controls for pausing and resuming the border overlay."
+/>
+
+## Making it fit the display
+
+Drawing the border was only part of the implementation. Modern phone displays aren't rectangles with four square corners, so Frame also needs to account for the shape of the screen.
+
+I added controls for border thickness and corner radius so I could align it with the physical edges of the display. Colour and opacity were useful for making the border visible without being distracting, and I later added an optional glow.
+
+## Frame
+
+There isn't much more planned for Frame. It solved the problem I built it for, and the project was primarily an opportunity to explore how persistent overlays work on Android.
+
+The final result gives me a configurable static border without ads, in-app purchases or a continuously running animation.
+
+The app and its source is available on [GitHub](https://github.com/denartes/Frame).
