@@ -1,0 +1,70 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+  images?: {
+    src: string;
+    alt: string;
+    width?: string | number;
+  }[];
+  caption?: string;
+  width?: string | number;
+}
+
+const { src, alt, images, caption, width = '100%' } = Astro.props;
+const imageItems = images ?? (src && alt ? [{ src, alt, width }] : []);
+---
+
+<figure class="content-image">
+  <div class:list={['content-image-grid', { 'is-multi': imageItems.length > 1 }]}>
+    {imageItems.map((image) => {
+      const imageWidth = typeof image.width === 'number' ? `${image.width}px` : image.width ?? '100%';
+
+      return <img src={image.src} alt={image.alt} style={`width: ${imageWidth};`} />;
+    })}
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .content-image {
+    width: 100%;
+    margin: 1.5em 0;
+    text-align: center;
+  }
+
+  .content-image-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .content-image-grid.is-multi {
+    align-items: flex-start;
+  }
+
+  .content-image img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: var(--radius-md);
+  }
+
+  .content-image-grid.is-multi img {
+    flex: 1 1 0;
+  }
+
+  .content-image figcaption {
+    margin-top: 0.75em;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  @media (max-width: 600px) {
+    .content-image-grid.is-multi {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
