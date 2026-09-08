@@ -7,6 +7,9 @@ draft: true
 comments: true
 ---
 
+import ContentImage from '@components/ContentImage.astro';
+import CodeSnippet from '@components/CodeSnippet.astro';
+
 A short introduction explaining what this post is about and why it's worth reading.
 
 ## Heading
