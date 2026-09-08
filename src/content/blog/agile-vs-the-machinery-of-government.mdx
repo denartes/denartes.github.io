@@ -1,0 +1,191 @@
+---
+title: "Agile vs the Machinery of Government"
+description: "Agile has a place, but what happens when Agile delivery is dropped into government machinery that was never designed to operate that way?"
+publishedDate: 2026-09-07
+tags: ["agile", "government", "project-delivery", "software-development"]
+draft: true
+comments: true
+---
+
+import ContentImage from '@components/ContentImage.astro';
+import CodeSnippet from '@components/CodeSnippet.astro';
+
+I've spent a lot of my career delivering IT projects in and around New Zealand government agencies, and I've started to notice the same contradiction appearing again and again.
+
+We call the delivery Agile. We work in sprints, write user stories, estimate story points, hold stand-ups and appoint product owners. But the project surrounding all of that operates very differently.
+
+Funding is approved against an investment case. Budgets, milestones and delivery dates need to be established. Progress needs to be reported through governance, and the agency needs to remain accountable for what it has committed to deliver with public money. None of that is unreasonable. In fact, much of it is necessary.
+
+The problem is that we then drop an Agile delivery model into the middle of that machinery and expect the two to work naturally together, despite being fundamentally different.
+
+Agile expects room to learn, adapt and reprioritise as delivery progresses. Government project governance needs enough certainty to approve an investment and hold people accountable for delivering it. Neither of those needs is inherently wrong, but they pull the project in different directions.
+
+What emerges is a strange hybrid. The project is governed through budgets, milestones, contracts and commitments, while the delivery team operates through sprints, story points, user stories and evolving requirements. We end up with all of the Agile theatre, but without many of the conditions that make Agile work.
+
+<ContentImage
+  src="/images/blog/agile-inside-government-machinery.png"
+  alt="Agile team inside government project machinery, with green reporting masking rising costs, delays and stakeholder conflict."
+  width={600}
+  caption="Agile delivery operating inside the machinery of government."
+/>
+
+## The machinery exists for a reason
+
+Before criticising what happens when Agile meets government, I think it's important to acknowledge why government projects operate the way they do.
+
+A government agency can't simply decide to spend a significant amount of public money and work out what it is building along the way. Investment needs to be justified, funding needs to be approved, expected outcomes need to be articulated, and there needs to be some indication of what the work will cost and when it will be delivered.
+
+Those commitments then flow down through the governance of the project. There are budgets, milestones, reporting requirements and people who are accountable for making sure the agency receives the value it said it would receive from the investment.
+
+It would be easy to look at those constraints through an Agile lens and conclude that government simply needs to become more Agile. I don't think that's particularly useful. Those constraints exist because government agencies have obligations that a software development team does not. The more interesting question is whether Agile is a natural fit for work being funded and governed in this way.
+
+Agile makes considerably more sense to me in a genuine product model. A product has ongoing ownership. Its backlog can evolve as needs change. The team can learn from what it has already delivered and decide what to do next. Development becomes part of operating and continuously improving the product.
+
+Government technology delivery, however, is frequently organised around projects. A particular investment is approved to achieve a particular outcome within a particular period of time. Even where organisations adopt product terminology and appoint product owners, significant development can still depend on separately funded projects with their own budgets, milestones and governance.
+
+I've experienced that distinction directly. During my time in the NZDF, I worked for a period as a product owner after the organisation moved towards a product model. We had products and product owners, but meaningful development of those products was still tied to projects. We had adopted product structures without escaping project machinery.
+
+And that distinction matters, because Agile delivery doesn't operate independently of the way the work around it is funded, governed and ultimately held accountable.
+
+## Agile needs more than ceremonies
+
+The problem becomes more obvious when you look beyond the mechanics of Agile and consider the conditions it assumes exist around the delivery team. Agile depends on being able to make decisions quickly. If priorities change or the team discovers something unexpected, someone needs to be able to decide what happens next. A product owner needs enough knowledge of the product and its users to make those decisions, but they also need the authority to make them.
+
+That can be difficult to achieve in a government project as project teams are often assembled specifically for the work being undertaken. Product owners, business analysts, technical leads and other roles may be brought together for the duration of the project, sometimes with a significant proportion of the team made up of contractors.
+
+Giving someone the title of Product Owner doesn't necessarily give them the experience, organisational knowledge or decision-making authority that Agile expects the role to have.
+
+I've seen this become a significant bottleneck. A question emerges during delivery, but the person sitting with the delivery team can't actually answer it. The decision needs to go somewhere else. It might need consultation with another business group, approval from a governance body, or agreement from people who aren't involved in the day-to-day delivery of the project.
+
+None of those steps are necessarily unnecessary. The problem is simply that they take time and you can't iterate quickly if you can't make decisions quickly.
+
+The same problem exists with changing priorities. Agile assumes that as we learn more, we can adjust what we're doing. But changing direction inside a project can affect scope, cost, milestones, contracts and commitments that have already been made elsewhere.
+
+The delivery team therefore has the mechanisms of Agile without necessarily having the freedom that makes those mechanisms useful.
+
+We can appoint a product owner, create a backlog, divide work into sprints and hold all of the expected ceremonies, and on the surface everything looks Agile. But the ability to make decisions, change direction and continuously reprioritise still sits within the machinery of project governance.
+
+And this is where I think many of the problems we associate with Agile delivery in government actually begin.
+
+## The false sense of definition
+
+One of the first places this mismatch becomes visible is in how requirements are defined. Agile gives us user stories as a way of describing what a user needs and why they need it. A business analyst can write a set of stories, add acceptance criteria, put them into a backlog and have them estimated by the delivery team. Before long, the project has something that looks like a well-defined body of work.
+
+<ContentImage
+  src="/images/blog/different-visions.png"
+  alt="Four project stakeholders interpret the same user story differently, each imagining a different solution while the delivered software matches none of them exactly."
+  width={600}
+  caption="The same requirement can create very different expectations of what will actually be delivered."
+/>
+
+The problem is that having a backlog full of user stories doesn't necessarily mean everyone has the same understanding of what is actually being built.
+
+This is particularly evident when the people on the client side aren't accustomed to working this way. The language of user stories and acceptance criteria is familiar to those of us who work in software delivery, but it can be a fairly abstract way of describing a system to the people who will ultimately use it or be accountable for its delivery.
+
+This means a user story can be reviewed, discussed and accepted without the client ever forming a concrete picture of what the finished functionality will actually look like. That understanding often comes later, when something tangible is put in front of them. A screen gets demonstrated. A workflow becomes usable. A release goes into user acceptance testing. Someone finally sits down with the software and tries to use it to do their job.
+
+That's when you start hearing things like, "that's not quite what we meant", or "we actually need it to work like this". In an Agile environment, discovering these things during delivery isn't necessarily a problem. Learning from working software and adjusting what comes next is part of the point.
+
+Inside a government project, however, that discovery is happening within a project that already has a budget, milestones, delivery dates and commitments built around what everyone previously thought they were delivering.
+
+The requirement may have existed as a user story from the beginning, but the shared understanding behind it was still developing, even after a requirement had been formally accepted.
+
+That creates a false sense of definition. The project can look far more certain on paper than it really is, and by the time that uncertainty becomes visible, delivery is already underway.
+
+## When story points escape the development team
+
+Once delivery is underway, the project still needs to answer a fairly fundamental question: are we on track? This is where I’ve repeatedly seen story points escape the development team and become a measure of project performance.
+
+Story points are useful as a relative estimation tool. The team can use them to reason about the complexity of different pieces of work and, over time, get some indication of how much work they are likely to complete within a sprint.
+
+The problem starts when that internal planning mechanism gets pulled upwards into project reporting. A team plans 60 points for a sprint and delivers 45. At the sprint review, the conversation quickly becomes about the missing 15 points. Why didn’t we achieve our planned velocity? What does this mean for the remaining backlog? If there are X points left and only Y sprints remaining, are we still going to finish on time?
+
+From a governance perspective, those are perfectly reasonable questions to ask. The project has commitments to meet and needs some way of determining whether delivery is progressing according to plan. But story points provide a very tempting answer to a question they were never really intended to answer.
+
+The team may have delivered less than its planned number of points while still making significant progress towards something useful. Requirements may have changed as understanding improved. Previously unknown complexity may have emerged. The team may have spent time solving a difficult problem that was poorly represented by the original estimate. None of that is particularly visible when progress is reduced to planned points versus completed points.
+
+The reverse is also true. A team can plan 60 points and deliver 60 points, sprint after sprint, giving the project every indication that delivery is proceeding exactly as expected. The dashboard stays green. Velocity looks healthy. The remaining points appear to fit neatly within the remaining sprints. But none of those numbers tell us whether the software being built actually matches the understanding of the people who are going to use it.
+
+That can remain hidden until something tangible is put in front of users. Suddenly, the uncertainty that existed behind those formally accepted requirements becomes visible, and a project that appeared healthy according to its delivery metrics can turn red remarkably quickly.
+
+This is essentially Goodhart’s Law: when a measure becomes a target, it ceases to be a good measure.
+
+Story points might be useful to a development team when they are used for relative estimation and planning. Once they become a measure of whether the project is performing well, however, they start influencing the behaviour they were supposed to measure.
+
+Teams become concerned with achieving the expected number of points. Governance starts forecasting delivery from velocity. A sprint that delivers fewer points becomes a warning sign, while one that delivers the expected number provides reassurance.
+
+The project starts optimising for the measure rather than the intended outcome. Worse, as we’ve already seen, that intended outcome may not yet be as clearly understood as the backlog makes it appear. We can therefore be successfully delivering story points against requirements that are still evolving in everyone’s understanding, while every project indicator tells us that things are going according to plan.
+
+## The board isn’t the work
+
+When story points don’t provide enough visibility into progress, attention naturally shifts to the work underneath them. This often means looking at the user stories themselves and watching how they move across the board.
+
+The problem is that user stories are a fairly poor representation of what a developer is actually doing from day to day. A story might move into In Development on Monday and still be sitting there on Thursday. During that time, the developer might have investigated an unfamiliar part of the system, worked through a difficult technical problem, written code, discovered an integration issue, tested several approaches and discarded the ones that didn’t work. Plenty of progress may have been made, but from the perspective of someone looking at the board, nothing has changed.
+
+An obvious Agile response to this is that the story is too large. Break it down into smaller stories and there will be more frequent movement across the board. There is some truth to this, but I think it exposes another problem I’ve seen repeatedly: user stories, features and epics are not always being used at the levels of abstraction they were intended for.
+
+When features and epics are poorly defined or barely used, user stories start carrying far more responsibility than they should. They become the unit used to describe requirements, organise development, estimate delivery and communicate progress to the client. Stories become larger and more complicated because we are asking them to represent meaningful pieces of functionality rather than the smaller units of work they are supposed to be.
+
+Breaking those stories down further might improve their movement across the board, but it creates the opposite problem for everyone outside the delivery team. The individual work items become even further removed from the level at which stakeholders understand the system. A developer might care that three stories moved to Done this week. A steering committee is more likely to care whether staff can now assess an application from beginning to end.
+
+This leaves us with two competing needs. The delivery team benefits from work being broken down into small, manageable pieces, while project management needs progress expressed at a level that represents something meaningful about the system being delivered.
+
+That is exactly what the hierarchy of work items should help us solve. Individual stories can remain small enough for the delivery team to work with, while the feature above them represents a recognisable piece of functionality. As the stories underneath it are completed, the feature provides a meaningful picture of how that part of the solution is progressing.
+
+When that hierarchy is used well, the board becomes genuinely useful to a project manager. They can see which capabilities are progressing, how much work remains within them, where delivery is slowing down and what has actually been completed. That gives them a much more complete picture from which to manage the project and produce the reporting required by governance.
+
+When it isn’t used well, that visibility disappears. The project manager is left looking directly at a collection of user stories that may be too large, too small, or simply too detached from the level at which project progress needs to be understood. A story sitting `In Development` for several days might represent substantial technical progress, but the board provides very little indication of that.
+
+The project manager still needs the missing information, so it has to come from somewhere. Developers are asked for more detailed updates, work items need additional commentary, and more delivery time is spent explaining the state of work so that it can be translated into project reporting.
+
+Some of that communication is obviously necessary on any project. The issue is the additional overhead created when the work items themselves aren’t providing the visibility they should. Each interruption may be small, but across a delivery team they accumulate, and repeatedly switching from technical work into status reporting carries its own cost.
+
+This can create a feedback loop. Poor visibility leads to more requests for information. Providing that information takes time and attention away from delivery. As delivery slows, concern about progress increases, creating even greater demand for visibility.
+
+The board should be helping the project manager understand delivery without requiring them to constantly interrogate the work underneath it. When the right levels of work are represented, movement on the board can tell a meaningful story about progress. When they aren’t, people have to tell that story manually.
+
+It also creates an interesting problem in the opposite direction. The same abstraction that can make a productive developer look like they aren’t progressing can make it difficult to see when someone genuinely isn’t progressing. In both cases the board can show the same thing: a story sitting In Development.
+
+The result is more reporting without necessarily creating better visibility. We become increasingly focused on the movement of delivery artefacts when what the project really needs to understand is whether meaningful capabilities are being built and whether those capabilities are moving us towards the intended outcome.
+
+## When green suddenly turns red
+
+Taken together, these problems can create a project that appears healthy for a surprisingly long time. The requirements have been documented and accepted. The backlog has been estimated. Sprints are being completed. Stories are moving through the board and progress is being reported through governance. There may be individual issues along the way, but overall the project appears to be doing what it was expected to do.
+
+Then the software reaches the people who actually need to use it. This might happen during a demonstration, user acceptance testing, or when a sufficiently complete part of the solution is finally available for someone to work through from beginning to end. Things that were difficult to recognise in a user story suddenly become obvious when they exist as working software.
+
+A process doesn’t quite reflect how the business actually operates. A piece of information that seemed incidental turns out to be important. Two requirements that made sense independently don’t work particularly well when they are brought together. Or the user simply looks at what has been built and realises that what they described months earlier isn’t quite what they need.
+
+None of this should be particularly surprising in software development. It is one of the reasons iterative delivery is useful in the first place. Putting working software in front of people improves their understanding of both the solution and their own requirements. The difficulty is that the learning is taking place inside a project whose commitments were established much earlier.
+
+Changing the software now may mean changing requirements that have already been accepted, reworking functionality that has already been completed, adding work to a backlog that was used to forecast delivery, or revisiting scope that sits behind existing budget and milestone commitments.
+
+A project that had been reporting green can therefore turn red remarkably quickly. The development team may have delivered exactly what was represented in the backlog, and the project may have tracked closely against its delivery metrics, while the shared understanding of the intended outcome was still developing underneath it.
+
+This is also where shared ambiguity can become surprisingly adversarial.
+
+Once the implications affect cost or delivery dates, everyone has a legitimate reason to look backwards. The client can point to what they understood the project was going to deliver. The delivery team can point to the requirements they were given. The supplier can point to what was agreed in the statement of work. Project governance can reasonably ask why the issue wasn’t visible while the project was reporting green.
+
+There may be no single moment where somebody clearly got the requirement wrong. The ambiguity existed between those different representations of the project, and everyone was able to proceed because they appeared sufficiently aligned at the time. By the time the difference becomes concrete, however, resolving it has a cost.
+
+That is what makes the earlier appearance of certainty so dangerous. A healthy velocity, an accepted backlog and a board showing steady progress can all be accurate representations of what the delivery team is doing. They just don’t necessarily tell us whether everyone still has the same understanding of where the project is going.
+
+## Fitting delivery to the environment
+
+None of this leads me to the conclusion that Agile is a bad way to build software. Many of the ideas behind Agile make a great deal of sense. Building incrementally, learning from working software and adapting as our understanding improves are all useful ways of dealing with the uncertainty inherent in software development.
+
+But those practices depend on the environment around them. If a delivery team is expected to adapt as it learns, the project needs to be able to accommodate that adaptation. If requirements are expected to evolve, the way scope, cost and delivery dates are governed needs to account for that uncertainty. If a product owner is expected to make decisions quickly, they need the knowledge and authority to actually make those decisions.
+
+Government projects can struggle to provide those conditions because the machinery surrounding them has different responsibilities. Public investment needs to be justified. Agencies need to know what they are committing money to. Budgets and milestones matter, and people need to be accountable for whether the promised outcomes are delivered. Those requirements aren’t going away because a software delivery team has decided to work in sprints.
+
+I think this is where we sometimes approach the problem from the wrong direction. We ask how government organisations can become more Agile, or how we can get governance and stakeholders to work in ways that better support our delivery methodology.
+
+Perhaps the more useful question is whether the delivery model we choose actually fits the environment in which we are asking it to operate. If the organisation cannot continuously reprioritise, cannot make decisions at the speed the delivery model expects, and needs considerably more certainty around scope, cost and time, we should account for those constraints when deciding how the work will be delivered.
+
+Otherwise, it is very easy to reproduce the visible parts of Agile without creating the conditions that make them useful. We have product owners, backlogs, user stories, story points, sprints, stand-ups and boards, while the project surrounding them continues to operate according to a very different set of assumptions.
+
+That is the contradiction I keep encountering in government technology delivery. The machinery of government exists for good reasons. Rather than asking that machinery to contort itself around Agile, I think we need to get better at choosing delivery approaches that work with it.
+
+This is something I’ve been thinking about increasingly in my own work. I’m looking more critically at how we structure delivery, how requirements are represented at different levels, what information project managers and governance actually need, and where our delivery practices create friction with the environment around them. I don’t think the answer is another methodology or a different set of ceremonies. For me, the useful work is in understanding those constraints properly and designing the delivery approach around them.
+
+I certainly don’t have all of the answers yet, but these are questions I want to explore further, both in my work and in future articles. There is a lot more to unpack around how we define work, measure progress, structure delivery and build software within the realities of government projects.
